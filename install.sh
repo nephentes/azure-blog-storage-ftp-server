@@ -28,14 +28,12 @@ mkdir /ftp/
 mkdir /ftp/ftp-files
 
 systemctl stop pure-ftpd
-rm /etc/init.d/pure-ftpd
 
 addgroup ftpusers
 useradd -g ftpusers -s /sbin/nologin ftpuser
 useradd -s /sbin/nologin ftp
 FTPGID=$(getent group ftpusers | cut -d: -f3)
 FTPUID=$(id -u ftpuser)
-
 
 openssl dhparam -out /etc/ssl/private/pure-ftpd-dhparams.pem 3072
 openssl req -x509 -nodes -newkey rsa:2048 -keyout /ftp/ftp.pem -out /ftp/ftp.pem -days 3650 -subj "/C=US/ST=NY/L=NY/O=NY/OU=NY/CN=NY emailAddress=email@example.com"
@@ -67,7 +65,7 @@ chown ftpuser:ftpusers /var/log/lighttpd/error.log
 mv /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.conf.$$
 wget -O /etc/lighttpd/lighttpd.conf https://raw.githubusercontent.com/RomainWilbert/azure-blog-storage-ftp-server/master/lighttpd.conf
 
-echo "TLS     2
+echo "TLS     1
 TLSCipherSuite	HIGH
 CertFile	/ftp/ftp.pem
 PureDB	/ftp/ftp.pdb" >> /etc/pure-ftpd/pure-ftpd.conf
